@@ -54,7 +54,31 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
-  const handleFormSubmit = async (values, onSubmitProps) => {};
+  const register = async (values, onSubmitProps) => {
+    // Image needs to be parsed into body
+    const formData = new FormData();
+    for (let value in values) {
+      formData.append(value, values[value]);
+    }
+    formData.append("picturePath", values.picture.name);
+    const savedUserResponse = await fetch(
+      "http://localhost:3001/auth/register",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const savedUser = await savedUserResponse.json();
+    onSubmitProps.resetForm();
+    if (savedUser) {
+      setPageType("login");
+    }
+  };
+
+  const handleFormSubmit = async (values, onSubmitProps) => {
+    if (isLogin) await login(values, onSubmitProps);
+    if (isRegister) await register(values, onSubmitProps);
+  };
 
   return (
     <Formik
@@ -213,7 +237,9 @@ const Form = () => {
                 },
               }}
             >
-              {isLogin ? "Don't have an account? Sign Up here." : "Already have an account? Login Here."}
+              {isLogin
+                ? "Don't have an account? Sign Up here."
+                : "Already have an account? Login Here."}
             </Typography>
           </Box>
         </form>
