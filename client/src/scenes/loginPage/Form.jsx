@@ -179,7 +179,7 @@ const Form = () => {
                   <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
-                    onDrop={(acceptedFiled) =>
+                    onDrop={(acceptedFiles) =>
                       setFieldValue("picture", acceptedFiles[0])
                     }
                   >
@@ -196,6 +196,7 @@ const Form = () => {
                         ) : (
                           <FlexBetween>
                             <Typography>{values.picture.name}</Typography>
+                            <EditOutlinedIcon />
                           </FlexBetween>
                         )}
                       </Box>
