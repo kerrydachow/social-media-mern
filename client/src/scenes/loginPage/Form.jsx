@@ -35,6 +35,7 @@ const initialValuesRegister = {
   firstName: "",
   lastName: "",
   email: "",
+  password: "",
   location: "",
   occupation: "",
   picture: "",
@@ -50,7 +51,7 @@ const Form = () => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isNonMobile = useMediaQuery("(min-width: 600px)");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
@@ -259,7 +260,7 @@ const Form = () => {
             >
               {isLogin
                 ? "Don't have an account? Sign Up here."
-                : "Already have an account? Login Here."}
+                : "Already have an account? Login here."}
             </Typography>
           </Box>
         </form>
