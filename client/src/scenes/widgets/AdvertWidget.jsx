@@ -1,6 +1,7 @@
 import { Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
+import { API_BASE_URL } from "lib/constants";
 
 const AdvertWidget = () => {
   const { palette } = useTheme();
@@ -20,8 +21,8 @@ const AdvertWidget = () => {
         width="100%"
         height="auto"
         alt="advert"
-        src="http://localhost:3001/assets/info4.jpeg"
-        style={{ borderRadius: "0.75rem", margin: "0.75rem 0"}}
+        src={`${API_BASE_URL}/assets/info4.jpeg`}
+        style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
       />
       <FlexBetween>
         <Typography color={main}>Cosmetics</Typography>
@@ -31,7 +32,7 @@ const AdvertWidget = () => {
         Take your beauty to the next level.
       </Typography>
     </WidgetWrapper>
-  )
-}
+  );
+};
 
 export default AdvertWidget;
