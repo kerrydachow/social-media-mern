@@ -21,6 +21,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const medium = palette.neutral.medium;
 
   const isFriend = friends.find((friend) => friend._id === friendId);
+  const isSelf = _id === friendId;
 
   const patchFriend = async () => {
     const response = await fetch(`${API_BASE_URL}/users/${_id}/${friendId}`, {
@@ -30,8 +31,11 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
         "Content-Type": "application/json",
       },
     });
+    const status = response.status;
     const data = await response.json();
-    dispatch(setFriends({ friends: data }));
+    if (status === 200) {
+      dispatch(setFriends({ friends: data }));
+    }
   };
 
   return (
@@ -62,7 +66,10 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
           </Typography>
         </Box>
       </FlexBetween>
-      <IconButton
+      {isSelf ? (
+        <></>
+      ): (
+        <IconButton
         onClick={() => patchFriend()}
         sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
       >
@@ -72,6 +79,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
           <PersonAddOutlined sx={{ color: primaryDark }} />
         )}
       </IconButton>
+      )}
     </FlexBetween>
   );
 };
