@@ -1,12 +1,12 @@
 import { useState } from "react";
 import {
   Box,
-  Button,
   TextField,
   useMediaQuery,
   Typography,
   useTheme,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -18,18 +18,18 @@ import FlexBetween from "components/FlexBetween";
 import { API_BASE_URL } from "lib/constants";
 
 const registerSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
-  location: yup.string().required("required"),
-  occupation: yup.string().required("required"),
-  picture: yup.string().required("required"),
+  firstName: yup.string().required("Required"),
+  lastName: yup.string().required("Required"),
+  email: yup.string().email("Invalid email").required("Required"),
+  password: yup.string().required("Required"),
+  location: yup.string().required("Required"),
+  occupation: yup.string().required("Required"),
+  picture: yup.string().required("Required"),
 });
 
 const loginSchema = yup.object().shape({
-  email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
+  email: yup.string().email("Invalid email").required("Required"),
+  password: yup.string().required("Required"),
 });
 
 const initialValuesRegister = {
@@ -49,6 +49,7 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [pageType, setPageType] = useState("login");
+  const [isLoading, setLoading] = useState(false);
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,35 +58,70 @@ const Form = () => {
   const isRegister = pageType === "register";
 
   const register = async (values, onSubmitProps) => {
+    setLoading(true);
+    // Check if email is valid
+    const verifyEmailResponse = await fetch(
+      `${API_BASE_URL}/auth/verifyEmail`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      }
+    );
+
+    if (verifyEmailResponse.status === 409) {
+      onSubmitProps.setErrors({
+        email: "Email already exists",
+      });
+      setLoading(false);
+      return;
+    } else if (verifyEmailResponse.status !== 202) {
+      onSubmitProps.setErrors({
+        email: "Something went terribly wrong...",
+      });
+      setLoading(false);
+      return;
+    }
+
     // Image needs to be parsed into body
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
     formData.append("picturePath", values.picture.name);
-    const savedUserResponse = await fetch(
-      `${API_BASE_URL}/auth/register`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    console.log(formData);
+    const savedUserResponse = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: "POST",
+      body: formData,
+    });
     const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
-    if (savedUser) {
-      setPageType("login");
+    if (savedUser.token) {
+      onSubmitProps.resetForm();
+      dispatch(
+        setLogin({
+          user: savedUser.savedUser,
+          token: savedUser.token,
+        })
+      );
+      navigate("/home");
+    } else {
+      onSubmitProps.setErrors({
+        email: "Something went terribly wrong...",
+      });
     }
+    setLoading(false);
   };
 
   const login = async (values, onSubmitProps) => {
+    setLoading(true);
     const loggedInResponse = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
     const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
+    if (loggedIn.token) {
+      onSubmitProps.resetForm();
       dispatch(
         setLogin({
           user: loggedIn.user,
@@ -93,7 +129,15 @@ const Form = () => {
         })
       );
       navigate("/home");
+    } else {
+      if (loggedInResponse.status === 400) {
+        onSubmitProps.setErrors({
+          email: "Invalid email or password",
+          password: "Invalid email or password",
+        });
+      }
     }
+    setLoading(false);
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
@@ -232,19 +276,27 @@ const Form = () => {
 
           {/* BUTTONS */}
           <Box>
-            <Button
+            <LoadingButton
               fullWidth
               type="submit"
-              sx={{
-                m: "2rem 0",
-                p: "1rem",
-                backgroundColor: palette.primary.main,
-                color: palette.background.alt,
-                "&:hover": { color: palette.primary.main },
-              }}
+              loading={isLoading}
+              loadingPosition="end"
+              variant={isLoading ? "outlined" : ""}
+              disabled={isLoading}
+              sx={
+                isLoading
+                  ? { m: "2rem 0", p: "1rem" }
+                  : {
+                      m: "2rem 0",
+                      p: "1rem",
+                      backgroundColor: palette.primary.main,
+                      color: palette.background.alt,
+                      "&:hover": { color: palette.primary.main },
+                    }
+              }
             >
-              {isLogin ? "LOGIN" : "REGISTER"}
-            </Button>
+              <Typography>{isLogin ? "LOGIN" : "REGISTER"}</Typography>
+            </LoadingButton>
             <Typography
               onClick={() => {
                 setPageType(isLogin ? "register" : "login");

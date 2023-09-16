@@ -3,6 +3,21 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 /* REGISTER USER */
+
+export const verifyEmail = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { email } = req.body;
+    if (await User.findOne({ email })) {
+      return res.status(409).json({ msg: "Email already exists." });
+    } else {
+      res.status(202).json({ msg: "Valid email address" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 export const register = async (req, res) => {
   try {
     const {
@@ -34,7 +49,8 @@ export const register = async (req, res) => {
       impressions: Math.floor(Math.random() * 10000), // Random value!
     });
     const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET);
+    res.status(201).json({ token, savedUser });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
