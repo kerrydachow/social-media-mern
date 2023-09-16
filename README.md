@@ -2,6 +2,9 @@
 This project is a simple Social Media application with user posts, post interactions, and user interactions. This project uses the MERN stack along with Redux and Material UI.
 
 :warning: Both the backend and frontend of this application is hosted on http://render.com. There will be some spin up time when the website is loaded on the hosted link due to Render's spin down on free-tier hosted websites.
+## Preview
+
+![](https://github.com/kerrydachow/social-media-mern/blob/main/socialio-gif.gif?raw=true)
 
 ## Features
 - Login / Register
