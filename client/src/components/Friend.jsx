@@ -2,7 +2,7 @@ import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setFriends } from "state";
+import { setFriends, setProfileFriends } from "state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import { API_BASE_URL } from "lib/constants";
@@ -33,8 +33,10 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     });
     const status = response.status;
     const data = await response.json();
+    console.log(data);
     if (status === 200) {
-      dispatch(setFriends({ friends: data }));
+      dispatch(setFriends({ friends: data.user }));
+      dispatch(setProfileFriends({ profileFriends: data.friend }));
     }
   };
 
@@ -68,17 +70,17 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
       </FlexBetween>
       {isSelf ? (
         <></>
-      ): (
+      ) : (
         <IconButton
-        onClick={() => patchFriend()}
-        sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
-      >
-        {isFriend ? (
-          <PersonRemoveOutlined sx={{ color: primaryDark }} />
-        ) : (
-          <PersonAddOutlined sx={{ color: primaryDark }} />
-        )}
-      </IconButton>
+          onClick={() => patchFriend()}
+          sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+        >
+          {isFriend ? (
+            <PersonRemoveOutlined sx={{ color: primaryDark }} />
+          ) : (
+            <PersonAddOutlined sx={{ color: primaryDark }} />
+          )}
+        </IconButton>
       )}
     </FlexBetween>
   );
