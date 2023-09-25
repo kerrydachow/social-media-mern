@@ -45,16 +45,40 @@ export const authSlice = createSlice({
       });
       state.posts = updatedPosts;
     },
+    setPostCommentCount: (state, action) => {
+      let commentIds = [];
+      action.payload.comments.forEach((comment) => {
+        commentIds.push(comment._id);
+      });
+      const postId = action.payload.comments[0].postId;
+      const updatedPosts = state.posts.map((post) =>
+        post._id === postId
+          ? {
+              ...post,
+              comments: commentIds,
+            }
+          : post
+      );
+      state.posts = updatedPosts;
+    },
     setProfileFriends: (state, action) => {
       if (state.user) {
         state.profileFriends = action.payload.profileFriends;
       } else {
-        console.error("user friends non-existent.")
+        console.error("user friends non-existent.");
       }
-    }
+    },
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setProfileFriends } =
-  authSlice.actions;
+export const {
+  setMode,
+  setLogin,
+  setLogout,
+  setFriends,
+  setPosts,
+  setPost,
+  setPostCommentCount,
+  setProfileFriends,
+} = authSlice.actions;
 export default authSlice.reducer;
