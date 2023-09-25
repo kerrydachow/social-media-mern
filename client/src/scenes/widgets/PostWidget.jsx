@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
 import { API_BASE_URL } from "lib/constants";
+import PostCommentsWidget from "./PostCommentsWidget";
 
 const PostWidget = ({
   postId,
@@ -95,14 +96,14 @@ const PostWidget = ({
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment}
+          <PostCommentsWidget postId={postId} />
+          {comments.length == 0 && (
+            <Box padding="1rem" display="flex" justifyContent="center">
+              <Typography color={main} variant="body2">
+                Be the first to Comment!
               </Typography>
             </Box>
-          ))}
+          )}
           <Divider />
         </Box>
       )}
