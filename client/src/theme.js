@@ -101,6 +101,10 @@ export const themeSettings = (mode) => {
         fontFamily: ["Rubik", "sans-serif"].join(","),
         fontSize: 14,
       },
+      h7: {
+        fontFamily: ["Rubik", "sans-serif"].join(","),
+        fontSize: 11,
+      },
     },
   };
 };
