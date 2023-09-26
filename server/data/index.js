@@ -123,7 +123,7 @@ export const posts = [
     location: "New York",
     description:
       "My first post!",
-    picturePath: "post2.jpeg",
+    picturePath: "post9.jpeg",
     userPicturePath: "p10.jpeg",
     likes: new Map([
       [userIds[0], true],
