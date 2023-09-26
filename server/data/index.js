@@ -6,8 +6,11 @@ const userIds = [
   new mongoose.Types.ObjectId(),
   new mongoose.Types.ObjectId(),
   new mongoose.Types.ObjectId(),
-
 ];
+const commentIds = Array.from({length: 5}, (_, i) => new mongoose.Types.ObjectId())
+const postIds = Array.from({length: 5}, (_, i) => new mongoose.Types.ObjectId())
+
+const currentDate = new Date(Date.now())
 
 export const users = [
   {
@@ -94,7 +97,7 @@ export const users = [
 
 export const posts = [
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[0],
     userId: userIds[0],
     firstName: "Kerry",
     lastName: "Chow",
@@ -109,13 +112,11 @@ export const posts = [
       [userIds[4], true],
     ]),
     comments: [
-      "Yay!",
-      "Finally, I've been waiting for this!",
-      "Welcome everyone!",
+      commentIds[2]
     ],
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[1],
     userId: userIds[1],
     firstName: "John",
     lastName: "McNeil",
@@ -131,14 +132,11 @@ export const posts = [
       [userIds[3], true],
     ]),
     comments: [
-      "one more random comment",
-      "and another random comment",
-      "no more random comments",
-      "I lied, one more random comment",
+      commentIds[4]
     ],
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[2],
     userId: userIds[2],
     firstName: "Jessica",
     lastName: "Ramos",
@@ -157,7 +155,7 @@ export const posts = [
     ],
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[3],
     userId: userIds[3],
     firstName: "Tiffany",
     lastName: "Smith",
@@ -173,10 +171,11 @@ export const posts = [
       [userIds[3], true],
     ]),
     comments: [
+      commentIds[3]
     ],
   },
   {
-    _id: new mongoose.Types.ObjectId(),
+    _id: postIds[4],
     userId: userIds[4],
     firstName: "Rahim",
     lastName: "Sandhu",
@@ -192,8 +191,81 @@ export const posts = [
       [userIds[3], true],
     ]),
     comments: [
-      "Congratulations!",
-      "Wow! Amazing!",
+      commentIds[0],
+      commentIds[1]
     ],
   },
 ];
+
+export const comments = [
+  {
+    _id: commentIds[0],
+    userId: userIds[0],
+    firstName: "Kerry",
+    lastName: "Chow",
+    userPicturePath: "p-kerry.jpeg",
+    postId: postIds[4],
+    likes: new Map([
+      [userIds[4], true],
+    ]),
+    description: "They look amazing!",
+    createdAt: currentDate,
+    updatedAt: currentDate,
+  },
+  {
+    _id: commentIds[1],
+    userId: userIds[3],
+    firstName: "Tiffany",
+    lastName: "Smith",
+    userPicturePath: "p2.jpeg",
+    postId: postIds[4],
+    likes: new Map([
+      [userIds[4], true],
+    ]),
+    description: "Majestic!",
+    createdAt: currentDate,
+    updatedAt: currentDate,
+  },
+  {
+    _id: commentIds[2],
+    userId: userIds[4],
+    firstName: "Rahim",
+    lastName: "Sandhu",
+    userPicturePath: "p3.jpeg",
+    postId: postIds[0],
+    likes: new Map([
+      [userIds[0], true],
+    ]),
+    description: "Welcome everyone!",
+    createdAt: currentDate,
+    updatedAt: currentDate,
+  },
+  {
+    _id: commentIds[3],
+    userId: userIds[2],
+    firstName: "Jessica",
+    lastName: "Ramos",
+    userPicturePath: "p1.jpeg",
+    postId: postIds[3],
+    likes: new Map([
+      [userIds[3], true],
+    ]),
+    description: "Looks delicious!",
+    createdAt: currentDate,
+    updatedAt: currentDate,
+  },
+  {
+    _id: commentIds[4],
+    userId: userIds[3],
+    firstName: "Tiffany",
+    lastName: "Smith",
+    userPicturePath: "p2.jpeg",
+    postId: postIds[1],
+    likes: new Map([
+      [userIds[1], true],
+    ]),
+    description: "Looking forward to more posts!",
+    createdAt: currentDate,
+    updatedAt: currentDate,
+  },
+]
